@@ -21,3 +21,10 @@ Other duration parsers guess at loose input — accepting `"1.5h"`, `"01:30"`, `
 ## Awkward edge
 
 Internal spacing between pairs is tolerant (`"1h  2m"` is accepted and equal to `"1h 2m"`), but leading and trailing whitespace are rejected. If you are reading durations from a config file that may contain stray newlines or indentation, strip the value yourself before calling `parse`. The library does not do this for you so that `" 1h"` and `"1h"` remain distinguishable to the caller.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
